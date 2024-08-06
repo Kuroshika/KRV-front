@@ -73,12 +73,12 @@ const onSubmit = async () => {
             console.log("?")
             nodeFlag = false;
         });
-    console.log("subFlag: ",subFlag)
-    console.log("nodeFlag: ",nodeFlag)
-    if(subFlag&&nodeFlag){
+    console.log("subFlag: ", subFlag)
+    console.log("nodeFlag: ", nodeFlag)
+    if (subFlag && nodeFlag) {
         status.value = "display";
         alert('Success: 修改成功');
-    }else{
+    } else {
         alert('Error: 修改失败');
     }
 }
@@ -98,11 +98,31 @@ onMounted(() => {
     timeNodeList.fetchData(); // 在组件挂载时自动获取数据
 });
 
+const addTimeNode = () => {
+    console.log("addTimeNode")
+    console.log(timeNodeList.dataList)
+    timeNodeList.dataList.push({
+        comments: "",
+        finishDate: "",
+        nodeName: "",
+        nodeOrder: 0,
+        state: 0,
+        subId:  timeNodeList.subId,
+    })
+    timeNodeList.dataList.forEach(item => item.nodeOrder=timeNodeList.dataList.indexOf(item));
+    console.log("After addTimeNode")
+    console.log(timeNodeList.dataList)
+}
+const delTimeNode = (nodeOrder) => {
+    console.log("delTimeNode")
+    timeNodeList.dataList.splice(nodeOrder)
+    timeNodeList.dataList.forEach(item => item.nodeOrder=timeNodeList.dataList.indexOf(item));
+}
 </script>
 
 <template>
     <div class="main-container">
-        <h1>Submission</h1>
+
         <div class="content-container">
             <form>
                 <ul>
@@ -155,9 +175,14 @@ onMounted(() => {
                                 readonly></input>
                             <input v-model="item.finishDate" v-if="!inputStatus" class="form-control"></input>
                         </div>
-
+                        <div class="col-md-1" v-if="!inputStatus"><a type="button"
+                                @click="delTimeNode(item.nodeOrder)">删除</a></div>
 
                     </div>
+                    <div>
+                        <button type="button" class="add-node-btn" v-if="!inputStatus" @click="addTimeNode"></button>
+                    </div>
+
                 </div>
 
             </form>
@@ -173,7 +198,6 @@ onMounted(() => {
                 <div class="submit-btn">
                     <button class="btn btn-primary" @click="onSubmit" v-if="status == 'edit'">提交</button>
                 </div>
-
             </div>
 
         </div>
@@ -205,5 +229,20 @@ onMounted(() => {
     padding: 20px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-node-btn {
+    border: none;
+    margin-top: 20px;
+    margin-left: 15px;
+    background-image: url(../assets/img/add-box.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 50px;
+
 }
 </style>
